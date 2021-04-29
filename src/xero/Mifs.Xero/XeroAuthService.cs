@@ -1,9 +1,8 @@
-﻿using Mifs.Authentication;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Mifs.Xero
 {
-    public class XeroAuthService : IAuthService
+    public class XeroAuthService
     {
         public Task<string> GetAccessToken()
         {

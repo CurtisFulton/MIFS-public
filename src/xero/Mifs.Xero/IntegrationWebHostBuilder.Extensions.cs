@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Mifs.Http;
+﻿using Mifs.Http.Server;
 
 namespace Mifs.Xero
 {

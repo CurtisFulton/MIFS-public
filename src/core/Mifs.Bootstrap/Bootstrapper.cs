@@ -1,7 +1,7 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Mifs.Hosting;
 using Mifs.Http.Proxy;
-using System.Reflection;
 
 namespace Mifs.Bootstrap
 {
@@ -16,6 +16,20 @@ namespace Mifs.Bootstrap
                    .ConfigureWebHostProxy(proxyBuilder =>
                    {
                        // Configure the reverse proxy
+                   })
+
+                   // Temp. This will be moved to ConfigureHostRoot/ConfigureWebHostProxy
+                   .ConfigureServices(services =>
+                   {
+                       services.AddSingleton<IntegrationHostManager>();
+                       services.AddSingleton<ProxyRouteCollection>();
+                       services.AddSingleton<IntegrationFileWatcher>();
+                       services.AddSingleton<IntegrationRegistrar>();
+
+                       services.AddSingleton<IIntegrationProvider, DefaultIntegrationProvider>();
+                       services.AddSingleton<IIntegrationHostFactory, IntegrationHostFactory>();
+
+                       services.AddHostedService<IntegrationInitializationHostService>();
                    });
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Mifs.Http;
+using Mifs.Http.Server;
 using System;
 
 namespace Mifs.Hosting
@@ -33,6 +34,7 @@ namespace Mifs.Hosting
 
         public static IHostBuilder ConfigureHostRoot(this IHostBuilder builder, Action<IIntegrationHostBuilder> configure)
         {
+            _ = builder ?? throw new NullReferenceException(nameof(builder));
 
             return builder;
         }

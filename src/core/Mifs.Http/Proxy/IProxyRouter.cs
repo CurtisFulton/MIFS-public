@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.ReverseProxy.Service.Proxy;
-using Mifs.Extensions;
 using System;
 using System.Linq;
 using System.Net;
@@ -59,7 +58,7 @@ namespace Mifs.Http.Proxy
             this.Logger.LogInformation("Attempting to proxy request {httpMethod} {requestUrl}. ", httpContext.Request.Method, requestUrl);
 
             var integrationName = this.GetIntegrationNameFromRequest(httpContext.Request);
-            if (integrationName.IsNullOrWhiteSpace())
+            if (string.IsNullOrWhiteSpace(integrationName))
             {
                 this.Logger.LogWarning("Could not get an integration name from the request with path {requestUrl}.", requestUrl);
 

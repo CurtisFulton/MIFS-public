@@ -15,7 +15,7 @@ namespace Mifs.Http.Server
         IIntegrationWebHostBuilder ConfigureMvcOptions(Action<MvcOptions> options);
     }
 
-    internal class IntegrationWebHostBuilder : IIntegrationWebHostBuilder
+    public class IntegrationWebHostBuilder : IIntegrationWebHostBuilder
     {
         public IntegrationWebHostBuilder(IHostBuilder builder)
         {

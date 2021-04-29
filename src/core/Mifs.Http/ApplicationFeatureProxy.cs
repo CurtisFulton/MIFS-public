@@ -7,7 +7,7 @@ namespace Mifs.Http
     /// The IFeatureCollection is required to get the port automatically assigned to Kestrel.
     /// This is in turn used to check if a web server has been setup for the created integration.
     /// </summary>
-    internal class ApplicationFeatureProxy
+    public class ApplicationFeatureProxy
     {
         public IFeatureCollection? FeatureCollection { get; set; }
     }

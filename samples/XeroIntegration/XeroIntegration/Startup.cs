@@ -29,15 +29,18 @@ namespace XeroIntegration
             services.AddXero(this.Configuration);
 
             // Jobs have to be added to the DI container to be used when they are scheduled
-            services.AddTransient<MEXPurchaseOrderExport>();
-            services.AddTransient<XeroSupplierImport>();
+            // services.AddTransient<MEXPurchaseOrderExport>();
+            // services.AddTransient<XeroSupplierImport>();
+            services.AddTransient<ExampleFakeExport>();
         }
 
         public async Task Configure(IIntegrationScheduler scheduler)
         {
             // Either set some cron schedules or make it execute on startup to test the jobs.
-            await scheduler.ScheduleJob<MEXPurchaseOrderExport, PurchaseOrder>(Array.Empty<string>(), executeOnStartup: false);
-            await scheduler.ScheduleJob<XeroSupplierImport, XeroContact>(Array.Empty<string>(), executeOnStartup: false);
+            // The following import/exports require a MEX Db connection
+            // await scheduler.ScheduleJob<MEXPurchaseOrderExport, PurchaseOrder>(Array.Empty<string>(), executeOnStartup: false);
+            // await scheduler.ScheduleJob<XeroSupplierImport, XeroContact>(Array.Empty<string>(), executeOnStartup: false);
+            await scheduler.ScheduleJob<ExampleFakeExport, MyCustomExportEntity>(new string[] { "0/10 * * * * ?" }, executeOnStartup: true);
         }
     }
 }

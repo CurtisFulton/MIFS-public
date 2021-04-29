@@ -1,7 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Mifs.Authentication;
 using Mifs.Xero.Api;
 
 namespace Mifs.Xero
@@ -11,8 +10,8 @@ namespace Mifs.Xero
         public static IServiceCollection AddXero(this IServiceCollection services, IConfiguration configuration)
         {
             services.TryAddTransient<IAccountingApiService, AccountingApiService>();
-            services.TryAddTransient<ITenantService, XeroTenantService>();
-            services.TryAddTransient<IAuthService, XeroAuthService>();
+            services.TryAddTransient<XeroTenantService>();
+            services.TryAddTransient<XeroAuthService>();
 
             // TODO: Remove this. I don't think using automapper for this is a good idea
             services.AddAutoMapper(typeof(InterfaceHostBuilder_Extensions).Assembly);

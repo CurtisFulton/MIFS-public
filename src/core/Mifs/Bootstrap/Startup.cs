@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mifs.Hosting;
-using Mifs.Http;
+using Mifs.Http.Proxy;
 
 namespace Mifs.Bootstrap
 {

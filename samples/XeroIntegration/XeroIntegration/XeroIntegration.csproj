@@ -18,6 +18,7 @@
     <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs\Mifs.csproj" />
     <ProjectReference Include="$(MifsMexProjectRoot)Mifs.MEX\Mifs.MEX.csproj" />
     <ProjectReference Include="$(MifsXeroProjectRoot)Mifs.Xero\Mifs.Xero.csproj" />
+    <ProjectReference Include="..\..\..\src\core\Mifs.Http\Mifs.Http.csproj" />
   </ItemGroup>
 
 </Project>
