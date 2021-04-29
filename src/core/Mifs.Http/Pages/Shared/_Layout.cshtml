@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/materialize/materialize.min.css" />
+</head>
+<body>
+    <header>
+        <nav class="nav-wrapper light-blue lighten-4">
+            <a href="#" class="brand-logo center black-text">Logo</a>
+            <ul class="left hide-on-med-and-down">
+                <li><a href="AddedPath" class="black-text">Added Path</a></li>
+            </ul>
+
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/materialize/materialize.min.js"></script>
+</body>
+</html>

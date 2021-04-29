@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs\Mifs.csproj" />
+    <ProjectReference Include="$(MifsMexProjectRoot)Mifs.MEX\Mifs.MEX.csproj" />
+    <ProjectReference Include="$(MifsXeroProjectRoot)Mifs.Xero\Mifs.Xero.csproj" />
+  </ItemGroup>
+
+</Project>

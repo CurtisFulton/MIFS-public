@@ -1,0 +1,8 @@
+<Project>
+    <PropertyGroup>
+        <MifsCoreProjectRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', 'src', 'core'))</MifsCoreProjectRoot>
+        <MifsMexProjectRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', 'src', 'mex'))</MifsMexProjectRoot>
+        <MifsXeroProjectRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', 'src', 'xero'))</MifsXeroProjectRoot>
+        <SamplesRoot>$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)', 'samples'))</SamplesRoot>
+    </PropertyGroup>
+</Project>

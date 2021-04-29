@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Xero.NetStandard.OAuth2" Version="3.14.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs\Mifs.csproj" />
+    <ProjectReference Include="$(MifsMexProjectRoot)Mifs.MEX\Mifs.MEX.csproj" />
+  </ItemGroup>
+
+</Project>
