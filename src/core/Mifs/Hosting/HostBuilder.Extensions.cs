@@ -47,6 +47,8 @@ namespace Mifs.Hosting
 
                 services.TryAddSingleton<ProxyRouteCollection>();
                 services.TryAddSingleton<IProxyRouter, HeaderIntegrationProxyRouter>();
+
+                services.AddHostedService<IntegrationInitializationHostService>();
             });
 
             return builder;

@@ -12,8 +12,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Bootstrap\Mifs.Bootstrap.csproj" />
     <ProjectReference Include="$(SamplesRoot)\XeroIntegration\XeroIntegration\XeroIntegration.csproj" />
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Dashboard\Mifs.Dashboard.csproj" />
   </ItemGroup>
 
 </Project>

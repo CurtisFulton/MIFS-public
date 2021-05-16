@@ -14,6 +14,10 @@ namespace XeroIntegration
                 .ConfigureIntegrationHostDefaults(integrationBuilder =>
                 {
                     integrationBuilder.UseStartup<Startup>();
+                })
+                .ConfigureIntegrationWebHostDefaults(webHostBuilder =>
+                {
+
                 });
         }
 

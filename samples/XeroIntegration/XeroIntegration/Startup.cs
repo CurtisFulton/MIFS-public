@@ -1,15 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Mifs.MEX;
-using Mifs.MEX.Domain;
 using Mifs.Scheduling;
 using Mifs.Xero;
-using System;
 using System.Threading.Tasks;
 using XeroIntegration.Export;
-using XeroIntegration.Import;
-
-using XeroContact = Xero.NetStandard.OAuth2.Model.Accounting.Contact;
 
 namespace XeroIntegration
 {
@@ -31,7 +26,7 @@ namespace XeroIntegration
             // Jobs have to be added to the DI container to be used when they are scheduled
             // services.AddTransient<MEXPurchaseOrderExport>();
             // services.AddTransient<XeroSupplierImport>();
-            services.AddTransient<ExampleFakeExport>();
+            // services.AddTransient<ExampleFakeExport>();
         }
 
         public async Task Configure(IIntegrationScheduler scheduler)
@@ -40,7 +35,7 @@ namespace XeroIntegration
             // The following import/exports require a MEX Db connection
             // await scheduler.ScheduleJob<MEXPurchaseOrderExport, PurchaseOrder>(Array.Empty<string>(), executeOnStartup: false);
             // await scheduler.ScheduleJob<XeroSupplierImport, XeroContact>(Array.Empty<string>(), executeOnStartup: false);
-            await scheduler.ScheduleJob<ExampleFakeExport, MyCustomExportEntity>(new string[] { "0/10 * * * * ?" }, executeOnStartup: true);
+            // await scheduler.ScheduleJob<ExampleFakeExport, MyCustomExportEntity>(new string[] { "0/10 * * * * ?" }, executeOnStartup: true);
         }
     }
 }

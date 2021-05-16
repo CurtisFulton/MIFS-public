@@ -23,21 +23,31 @@ namespace Mifs.Http
                 {
                     services.AddIntegrationProxy();
 
-                    var mvcBuilder = services.AddControllers();
+                    var mvcBuilder = services.AddControllersWithViews();
                     services.AddRazorPages();
 
                     configureMvc?.Invoke(mvcBuilder);
                 });
 
-                webBuilder.Configure(app =>
+                webBuilder.Configure((context, app) =>
                 {
+                    if (context.HostingEnvironment.IsDevelopment())
+                    {
+                        app.UseWebAssemblyDebugging();
+                    }
+
+                    app.UseBlazorFrameworkFiles();
+                    app.UseStaticFiles();
+
                     app.UseRouting();
                     app.UseEndpoints(endpoints =>
                     {
                         endpoints.MapRazorPages();
                         endpoints.MapControllers();
 
-                        endpoints.MapIntegrationFallback();
+                        endpoints.MapFallbackToFile("index.html");
+
+                        //endpoints.MapIntegrationFallback();
                     });
                 });
 

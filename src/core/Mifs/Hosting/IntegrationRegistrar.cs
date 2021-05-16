@@ -3,6 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Mifs.Extensions;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Mifs.Hosting
@@ -31,13 +33,15 @@ namespace Mifs.Hosting
         {
             this.IntegrationFileWatcher = integrationFileWatcher;
             this.Logger = logger;
+
+            this.OnIntegrationDeregistered += IntegrationDeregisteredCallback;
         }
 
         public event IntegrationRegisteredDelegate? OnIntegrationRegistered;
         public event IntegrationDeregisteredDelegate? OnIntegrationDeregistered;
         public event IntegrationFilesModifiedDelegate? OnIntegrationFilesModified;
 
-        private IMemoryCache IntegrationCache { get; } = new MemoryCache(new MemoryCacheOptions());
+        private ConcurrentDictionary<string, IntegrationRegistration> AllIntegrations { get; } = new ConcurrentDictionary<string, IntegrationRegistration>();
 
         private IntegrationFileWatcher IntegrationFileWatcher { get; }
         private ILogger<IntegrationRegistrar> Logger { get; }
@@ -47,7 +51,7 @@ namespace Mifs.Hosting
             var integrationName = integrationRegistration.Name;
             if (this.TryGetRegistration(integrationName, out var existingRegistration))
             {
-                if (integrationRegistration.Directory != existingRegistration.Directory)
+                if (existingRegistration is not null && integrationRegistration.Directory != existingRegistration.Directory)
                 {
                     this.Logger.LogWarning("Trying to register {integrationName} from directory {newDirectory} but it is already registered for directory {existingDirectory}. If you intended to change the directory deregister the old one first.",
                                                                 integrationName, integrationRegistration.Directory, existingRegistration.Directory);
@@ -61,33 +65,52 @@ namespace Mifs.Hosting
             }
 
             this.Logger.LogInformation("Registering {integrationName} to directory {directory}.", integrationName, integrationRegistration.Directory);
-            this.IntegrationCache.GetOrCreate(integrationName,
-                                              (entry) => this.AddIntegrationRegistration(entry, integrationRegistration));
-        } 
+            this.AllIntegrations.GetOrAdd(integrationName,
+                                          _ => this.AddIntegrationRegistration(integrationRegistration));
+        }
 
         public void Deregister(string integrationName)
-            => this.IntegrationCache.Remove(integrationName);
-
-        public bool TryGetRegistration(string integrationName, out IntegrationRegistration integrationRegistration)
-            => this.IntegrationCache.TryGetValue(integrationName, out integrationRegistration);
+        {
+            if (this.AllIntegrations.Remove(integrationName, out var _))
+            {
+                this.Logger.LogInformation("Removing {integrationName} registration.", integrationName);
+                this.OnIntegrationDeregistered?.Invoke(integrationName);
+                this.Logger.LogInformation("{integrationName} registration has been removed.", integrationName);
+            }
+        }
+            
+        public bool TryGetRegistration(string integrationName, out IntegrationRegistration? integrationRegistration)
+            => this.AllIntegrations.TryGetValue(integrationName, out integrationRegistration);
 
         public bool IsIntegrationRegistered(string integrationName)
-            => this.TryGetRegistration(integrationName, out _);
+            => this.AllIntegrations.ContainsKey(integrationName);
 
-        public IntegrationRegistration GetRegistration(string integrationName)
-            => this.IntegrationCache.Get<IntegrationRegistration>(integrationName);
+        public ICollection<IntegrationRegistration> GetIntegrations()
+            => this.AllIntegrations.Values;
 
         /// <summary>
-        /// Disposing of the underlying cache which will cause all of the entries to be evicted and cleaned up.
+        /// Deregister all integrations and clean up handlers.
         /// </summary>
         public void Dispose()
-            => this.IntegrationCache.Dispose();
+        {
+            foreach (var integrationName in this.AllIntegrations.Keys)
+            {
+                if (integrationName is null)
+                {
+                    continue;
+                }
 
-        private IntegrationRegistration AddIntegrationRegistration(ICacheEntry cacheEntry, IntegrationRegistration integrationRegistration)
+                this.Deregister(integrationName);
+            }
+
+            this.OnIntegrationRegistered = null;
+            this.OnIntegrationDeregistered = null;
+            this.OnIntegrationFilesModified = null;
+        }
+
+        private IntegrationRegistration AddIntegrationRegistration(IntegrationRegistration integrationRegistration)
         {
             this.IntegrationFileWatcher.AddFileWatcher(integrationRegistration.Name, integrationRegistration.Directory, this.IntegrationFilesModified);
-
-            cacheEntry.RegisterPostEvictionCallback(this.OnCacheEntryEvicted);
 
             this.OnIntegrationRegistered?.Invoke(integrationRegistration.Name);
             return integrationRegistration;
@@ -95,7 +118,7 @@ namespace Mifs.Hosting
 
         private void IntegrationFilesModified(string directory, string integrationName)
         {
-            if (!this.IntegrationCache.TryGetValue<IntegrationRegistration>(integrationName, out var integrationRegistration))
+            if (!this.TryGetRegistration(integrationName, out var integrationRegistration))
             {
                 this.Logger.LogWarning("File changes detected in directory {integrationDirectory} but there is no integration registered with the name {integrationName}", directory, integrationName);
                 return;
@@ -105,22 +128,16 @@ namespace Mifs.Hosting
             if (!Directory.Exists(directory))
             {
                 this.Logger.LogInformation("Removing {integrationName} registration because the directory {integrationDirectory} no longer exists.", integrationName, directory);
-                this.IntegrationCache.Remove(integrationName);
+                this.Deregister(integrationName);
                 return;
             }
 
             this.OnIntegrationFilesModified?.Invoke(directory, integrationName);
         }
 
-        private void OnCacheEntryEvicted(object key, object value, EvictionReason reason, object state)
+        private void IntegrationDeregisteredCallback(string integrationName)
         {
-            var integrationName = (string)key;
-            this.Logger.LogInformation("Removing {integrationName} registration.", integrationName);
-
             this.IntegrationFileWatcher.RemoveFileWatcher(integrationName);
-            this.OnIntegrationDeregistered?.Invoke(integrationName);
-
-            this.Logger.LogInformation("{integrationName} registration has been removed.", integrationName);
         }
     }
 }

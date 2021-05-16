@@ -97,20 +97,6 @@ namespace Mifs.Http
             var applicationFeatureProxy = app.ApplicationServices.GetRequiredService<ApplicationFeatureProxy>();
             applicationFeatureProxy.FeatureCollection = app.ServerFeatures;
 
-            // Controllers don't allow Post requests with no Content-Type header, so if there isn't one we manually add it in.
-            // Just fall back to the json formatter, which should result in a null object because there should be no content.
-            // TODO: Probably fix this at the proxy level rather than like this.
-            //app.Use(async (context, next) =>
-            //{
-            //    var contentTypeHeader = context.Request.Headers.FirstOrDefault(header => header.Key.Equals("Content-Type", StringComparison.CurrentCultureIgnoreCase));
-            //    if (contentTypeHeader.Key is null)
-            //    {
-            //        context.Request.Headers.Add("Content-Type", "application/json");
-            //    }
-
-            //    await next();
-            //});
-
             app.UseRouting();
             app.UseEndpoints(endpoints =>
             {

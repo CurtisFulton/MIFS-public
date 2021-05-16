@@ -54,6 +54,9 @@ namespace Mifs.Hosting
         private bool IsHostRunning(IntegrationHostData hostData)
             => hostData?.Status == HostStatus.Started;
 
+        public HostStatus? GetIntegrationHostStatus(string integrationName)
+            => this.IntegrationHostCache.Get<IntegrationHostData>(integrationName)?.Status;
+
         /// <summary>
         /// Attempts to start the host.
         /// Will do validation to check that it registered, valid, and not already running.
@@ -84,7 +87,7 @@ namespace Mifs.Hosting
             // We use GetOrCreateAsync instead of Set because it's possible that 2 threads could call TryStartHost at the same time
             // If they both made it to this point and use Set, we would be creating 2 hosts and instantly disposing of 1 of them which would be wasteful.
             // Instead we allow the IMemoryCache to deal with threading issues.
-            await this.IntegrationHostCache.GetOrCreateAsync(integrationName, entry => this.CreateAndStartIntegrationHost(entry, integrationRegistration, cancellationToken));
+            await this.IntegrationHostCache.GetOrCreateAsync(integrationName, entry => this.CreateAndStartIntegrationHost(entry, integrationRegistration!, cancellationToken));
         }
 
         /// <summary>
