@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.ReverseProxy.Service.Proxy;
 using System;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Yarp.ReverseProxy.Service.Proxy;
 
-namespace Mifs.Http.Proxy
+namespace Mifs.Http
 {
     public interface IProxyRouter
     {
@@ -18,16 +18,15 @@ namespace Mifs.Http.Proxy
     /// <summary>
     /// Proxy router that sits on the root Host to proxy requests from a publicly accessible
     /// endpoint, to the child Host kestrel servers.
-    /// By default it will try listening on port 80, with a path of /MEXIntegration.
     /// The integration to proxy to is determined by the 'Integration-Name header'
     /// </summary>
-    public class IntegrationProxyRouter : IProxyRouter
+    public class HeaderIntegrationProxyRouter : IProxyRouter
     {
         private static string IntegrationNameHeader { get; } = "Integration-Name";
 
-        public IntegrationProxyRouter(IHttpProxy httpProxy,
+        public HeaderIntegrationProxyRouter(IHttpProxy httpProxy,
                                       ProxyRouteCollection proxyRouteCollection,
-                                      ILogger<IntegrationProxyRouter> logger)
+                                      ILogger<HeaderIntegrationProxyRouter> logger)
         {
             this.HttpProxy = httpProxy;
             this.ProxyRouteCollection = proxyRouteCollection;
@@ -36,7 +35,7 @@ namespace Mifs.Http.Proxy
 
         private IHttpProxy HttpProxy { get; }
         private ProxyRouteCollection ProxyRouteCollection { get; }
-        private ILogger<IntegrationProxyRouter> Logger { get; }
+        private ILogger<HeaderIntegrationProxyRouter> Logger { get; }
 
         private HttpMessageInvoker HttpClient { get; } = new HttpMessageInvoker(new SocketsHttpHandler()
         {
@@ -81,7 +80,7 @@ namespace Mifs.Http.Proxy
         }
 
         private string GetIntegrationNameFromRequest(HttpRequest request)
-            => request.Headers.FirstOrDefault(x => x.Key.Equals(IntegrationProxyRouter.IntegrationNameHeader, StringComparison.CurrentCultureIgnoreCase))
+            => request.Headers.FirstOrDefault(x => x.Key.Equals(HeaderIntegrationProxyRouter.IntegrationNameHeader, StringComparison.CurrentCultureIgnoreCase))
                               .Value;
 
     }

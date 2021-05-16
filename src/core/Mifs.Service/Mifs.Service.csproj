@@ -9,7 +9,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Bootstrap\Mifs.Bootstrap.csproj" />
+    <ProjectReference Include="..\Mifs.Dashboard\Mifs.Dashboard.csproj" />
+    <ProjectReference Include="..\Mifs\Mifs.csproj" />
   </ItemGroup>
 
 </Project>

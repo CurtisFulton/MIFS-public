@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 
-namespace Mifs.Http.Proxy
+namespace Mifs.Http
 {
     /// <summary>
     /// Helper collection to manage the registered proxy routes.

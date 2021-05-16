@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Mifs.Http;
-using Mifs.Http.Server;
 using System;
 
 namespace Mifs.Hosting
@@ -31,10 +31,23 @@ namespace Mifs.Hosting
             return builder;
         }
 
-
-        public static IHostBuilder ConfigureHostRoot(this IHostBuilder builder, Action<IIntegrationHostBuilder> configure)
+        public static IHostBuilder ConfigureRootIntegrationHost(this IHostBuilder builder)
         {
             _ = builder ?? throw new NullReferenceException(nameof(builder));
+
+            builder.ConfigureServices(services =>
+            {
+                services.TryAddSingleton<IntegrationHostManager>();
+                services.TryAddSingleton<IntegrationFileWatcher>();
+                services.TryAddSingleton<IntegrationRegistrar>();
+                services.TryAddSingleton<IntegrationInitializationHostService>();
+
+                services.TryAddSingleton<IIntegrationProvider, DefaultIntegrationProvider>();
+                services.TryAddSingleton<IIntegrationHostFactory, IntegrationHostFactory>();
+
+                services.TryAddSingleton<ProxyRouteCollection>();
+                services.TryAddSingleton<IProxyRouter, HeaderIntegrationProxyRouter>();
+            });
 
             return builder;
         }

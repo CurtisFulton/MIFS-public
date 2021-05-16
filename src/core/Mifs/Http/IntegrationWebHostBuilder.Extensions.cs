@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 
-namespace Mifs.Http.Server
+namespace Mifs.Http
 {
     public static class IntegrationWebHostBuilder_Extensions
     {

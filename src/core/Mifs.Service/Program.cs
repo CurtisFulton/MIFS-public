@@ -1,13 +1,8 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
-using Mifs.Bootstrap;
 using Mifs.Hosting;
 using Mifs.Http;
 using Serilog;
-using System;
+using Serilog.Core;
 using System.Threading.Tasks;
 
 namespace Mifs.Service
@@ -16,10 +11,25 @@ namespace Mifs.Service
     {
         public static Task Main(string[] args)
         {
-            return Bootstrapper.CreateMifsHost(args)
-                               .UseWindowsService()
-                               .Build()
-                               .RunAsync();
+            return Host.CreateDefaultBuilder(args)
+                       .UseSerilog(logger: CreateSerilogLogger(), dispose: true)
+                       .ConfigureRootIntegrationHost()
+                       .ConfigureIntegrationProxyDefaults(mvcBuilder =>
+                       {
+                           mvcBuilder.AddRazorApplicationPart(typeof(Mifs.Dashboard.IndexModel).Assembly);
+                       })
+                       //.UseWindowsService()
+                       .RunConsoleAsync();
         }
+
+        private static Logger CreateSerilogLogger()
+            => new LoggerConfiguration()
+                .MinimumLevel.Information()
+                .WriteTo.Console()
+                .Enrich.WithProperty("Application", "Mifs.Service")
+                .Enrich.FromLogContext()
+                .Enrich.WithMachineName()
+                .Enrich.WithProcessId()
+                .CreateLogger();
     }
 }
