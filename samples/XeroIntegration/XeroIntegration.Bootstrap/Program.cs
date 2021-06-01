@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Mifs.Hosting;
-using Mifs.Http;
-using Mifs.Service;
+﻿using Microsoft.Extensions.Hosting;
+using Mifs.Supervisor;
+using Mifs.Supervisor.Dashboard;
 using Serilog;
 using Serilog.Core;
 using System.Threading.Tasks;
@@ -20,15 +18,10 @@ namespace XeroIntegration.Bootstrap
         {
             return Host.CreateDefaultBuilder(args)
                        .UseSerilog(logger: CreateSerilogLogger(), dispose: true)
-                       .ConfigureIntegrationProxyDefaults(mvcBuilder =>
+                       .ConfigureSupervisorHost()
+                       .ConfigureSupervisorWebHostDefaults(mvcBuilder =>
                        {
-                           // Add the dashboard
-                           mvcBuilder.AddRazorApplicationPart(typeof(Mifs.Dashboard.IndexModel).Assembly);
-                       })
-                       .ConfigureRootIntegrationHost()
-                       .ConfigureServices(services =>
-                       {
-                           services.AddHostedService<ApplicationPartsLogger>();
+                           mvcBuilder.AddMifsDashboard();
                        })
                        .RunConsoleAsync();
 

@@ -69,7 +69,7 @@ namespace XeroIntegration.Export
             await this.ProcessedEntityLogger.LogSuccess(mexPo.Id, cancellationToken);
         }
 
-        private async Task<XeroPurchaseOrder> GenerateXeroPurchaseOrder(PurchaseOrder mexPo, CancellationToken cancellationToken)
+        private async Task<XeroPurchaseOrder?> GenerateXeroPurchaseOrder(PurchaseOrder mexPo, CancellationToken cancellationToken)
         {
             var mexSupplier = mexPo.SupplierContact;
             var xeroContact = await this.AccountingApi.GetContacts(where: $"Name==\"{mexSupplier?.FirstName}\"")
@@ -77,7 +77,7 @@ namespace XeroIntegration.Export
 
             if (xeroContact is null)
             {
-                throw new InvalidOperationException($"Unable to find Xero Supplier with name {mexSupplier.FirstName} for Purchase Order {mexPo.PurchaseOrderNumber}.");
+                throw new InvalidOperationException($"Unable to find Xero Supplier with name {mexSupplier?.FirstName} for Purchase Order {mexPo.PurchaseOrderNumber}.");
             }
 
             var xeroPo = this.Mapper.Map<PurchaseOrder, XeroPurchaseOrder>(mexPo);
@@ -86,6 +86,11 @@ namespace XeroIntegration.Export
             var xeroLines = new List<XeroLineItem>();
 
             using var mexDbContext = this.MexDbContextFactory.Create();
+            if (mexDbContext is null)
+            {
+                return null;
+            }
+
             var poLines = this.GetPurchaseOrderLinesForPo(mexPo, mexDbContext);
 
             await foreach (var poLine in poLines.WithCancellation(cancellationToken))

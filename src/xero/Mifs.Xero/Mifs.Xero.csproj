@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs\Mifs.csproj" />
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Integration\Mifs.Integration.csproj" />
     <ProjectReference Include="$(MifsMexProjectRoot)Mifs.MEX\Mifs.MEX.csproj" />
   </ItemGroup>
 

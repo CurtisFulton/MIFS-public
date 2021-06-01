@@ -2,7 +2,6 @@
 using Mifs.Scheduling;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +19,8 @@ namespace XeroIntegration.Export
 
         public async IAsyncEnumerable<MyCustomExportEntity> GetData([EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            // Normally data would be pulled from a database
-            for (int i = 0; i < 10; i++)
+            // Normally data would be pulled from a database/FTP
+            for (int i = 0; i < 2; i++)
             {
                 yield return new MyCustomExportEntity(i);
                 await Task.Yield();

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Hosting;
 using Mifs;
 using Mifs.Hosting;
+using Mifs.Http;
+using Mifs.Xero;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +19,7 @@ namespace XeroIntegration
                 })
                 .ConfigureIntegrationWebHostDefaults(webHostBuilder =>
                 {
-
+                    webHostBuilder.UseXeroOAuth();
                 });
         }
 

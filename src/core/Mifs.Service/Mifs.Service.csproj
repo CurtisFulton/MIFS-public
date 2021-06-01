@@ -5,12 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="5.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Mifs.Dashboard\Mifs.Dashboard.csproj" />
-    <ProjectReference Include="..\Mifs\Mifs.csproj" />
+    <ProjectReference Include="..\Mifs.Integration\Mifs.Integration.csproj" />
+    <ProjectReference Include="..\Mifs.Supervisor.Dashboard\Mifs.Supervisor.Dashboard.csproj" />
+    <ProjectReference Include="..\Mifs.Supervisor\Mifs.Supervisor.csproj" />
   </ItemGroup>
 
 </Project>

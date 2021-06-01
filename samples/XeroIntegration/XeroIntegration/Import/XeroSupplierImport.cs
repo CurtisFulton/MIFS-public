@@ -12,6 +12,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+
 using MEXContact = Mifs.MEX.Domain.Contact;
 using XeroAddressTypeEnum = Xero.NetStandard.OAuth2.Model.Accounting.Address.AddressTypeEnum;
 using XeroContact = Xero.NetStandard.OAuth2.Model.Accounting.Contact;
@@ -19,7 +20,7 @@ using XeroPhoneTypeEnum = Xero.NetStandard.OAuth2.Model.Accounting.Phone.PhoneTy
 
 namespace XeroIntegration.Import
 {
-    public class XeroSupplierImport : IInitialize, IScheduledDataProvider<XeroContact>, IProcessEntity<XeroContact>
+    public class XeroSupplierImport : IJobInitializer, IScheduledDataProvider<XeroContact>, IProcessEntity<XeroContact>
     {
         public XeroSupplierImport(IAccountingApiService accountingApi,
                                 IMEXDbContext mexDbContext,
@@ -34,7 +35,7 @@ namespace XeroIntegration.Import
         private IMEXDbContext MexDbContext { get; }
         private IAccountCodeService AccountCodeService { get; }
 
-        private IEnumerable<MEXContact> MEXSuppliers { get; set; }
+        private IEnumerable<MEXContact> MEXSuppliers { get; set; } = new List<MEXContact>();
 
         public async Task Initialize(CancellationToken cancellationToken)
         {

@@ -13,7 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="$(SamplesRoot)\XeroIntegration\XeroIntegration\XeroIntegration.csproj" />
-    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Dashboard\Mifs.Dashboard.csproj" />
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Supervisor\Mifs.Supervisor.csproj" />
+    <ProjectReference Include="$(MifsCoreProjectRoot)\Mifs.Supervisor.Dashboard\Mifs.Supervisor.Dashboard.csproj" />
   </ItemGroup>
 
 </Project>

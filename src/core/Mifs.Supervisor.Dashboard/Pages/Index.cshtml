@@ -1,0 +1,29 @@
+﻿@page
+@model Mifs.Supervisor.Dashboard.IndexModel
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Dashboard</title>
+</head>
+<body>
+    <h1 style="text-align: center">Dashboard</h1>
+
+    <div style="display: flex; flex-direction: column; max-width: 50rem; margin: auto;">
+        @foreach (var integrationRegistration in this.Model.Integrations)
+        {
+            <div style="box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);  padding: 1rem;">
+                <ul>
+                    <li>Name: @integrationRegistration.Name</li>
+                    <li>Status: @integrationRegistration.Status</li>
+                    <li>Directory: @integrationRegistration.Directory</li>
+                </ul>
+
+                <button>Stop</button>
+            </div>
+        }
+    </div>
+</body>
+</html>
